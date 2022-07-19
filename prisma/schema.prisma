@@ -52,3 +52,9 @@ model Permission {
   role        Role     @relation(fields: [accessId], references: [id])
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt   DateTime
+}
