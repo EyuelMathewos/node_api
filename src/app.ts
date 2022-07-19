@@ -1,5 +1,5 @@
 import express from 'express';
-import registerRouter from './routes/userRouter'
+import userRouter from './routes/userRouter'
 
 
 
@@ -13,6 +13,6 @@ app.get("/", (req, res) => {
 });
 
 app.use(express.json());
-app.use("/api/v1/register", registerRouter);
+app.use("/api/v1/user", userRouter);
 
 module.exports = app;
