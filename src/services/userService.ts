@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client"
+import { getUser } from "./auth";
 
 
 const prisma = new PrismaClient();
@@ -12,5 +13,10 @@ export const create = async (userData: any) => {
             password: userData.password,
         }
     })
+    return result;
+}
+
+export const login = async (email: string, password: string) => {
+    const result = await getUser(email);
     return result;
 }
