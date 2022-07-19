@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client";
+const bcrypt =  require('bcryptjs');
 import { getUser } from "./auth";
 
 
@@ -17,6 +18,7 @@ export const create = async (userData: any) => {
 }
 
 export const login = async (email: string, password: string) => {
-    const result = await getUser(email);
-    return result;
+    const User:any = await getUser(email);
+    const isPass = User.password != null ? bcrypt.compareSync(password, User.password) : false;
+    return {status: isPass, User};
 }

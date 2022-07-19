@@ -1,4 +1,5 @@
 import express, { Request } from 'express';
+import { NextFunction, Response } from 'express-serve-static-core';
 import userRouter from './routes/userRouter';
 const app = express();
 const session = require('express-session')
@@ -8,9 +9,10 @@ const { PrismaClient } = require('@prisma/client');
 interface CustomRequest extends Request {
   session ? : any
 }
-app.use(express.urlencoded({ extended: false }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(session({
-  secret: 'thisismysecretkey',
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: { secure: true },
@@ -25,11 +27,17 @@ app.use(session({
 })
 );
 
+function isAuth (req: CustomRequest, res: Response, next: NextFunction) {
+    const loggedinUser = req.session.isAuth;
+    console.log(loggedinUser);
+    next()
+}
+
+app.use(isAuth);
 app.get("/", (req: CustomRequest, res) => { 
   res.send("Exporess is working"); 
 });
 
-app.use(express.json());
 app.use("/api/v1/user", userRouter);
 
 module.exports = app;
