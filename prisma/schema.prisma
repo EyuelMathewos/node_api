@@ -9,3 +9,46 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
+model User {
+  id               Int                @id @default(autoincrement())
+  firstname        String?
+  lastname         String?
+  email            String             @unique
+  social           Json?
+  password         String
+  isAdmin          Boolean            @default(false)
+  roleId           Int?
+  role             Role?              @relation(fields: [roleId],references: [id])
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+}
+enum TokenType {
+   EMAIL
+   API
+}
+
+model Role {
+  id           Int      @id @default(autoincrement())
+  name         String
+  users        User[]
+  permissions  Permission[]
+}
+model Permission {
+  id          Int      @id @default(autoincrement())
+  action      String
+  subject     String
+  description String?
+  conditions  Json?
+  fields      Json?
+  accessId    Int
+  role        Role     @relation(fields: [accessId], references: [id])
+}
+
