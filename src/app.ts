@@ -1,4 +1,5 @@
 import express, { Request } from 'express';
+import userRouter from './routes/userRouter';
 const app = express();
 const session = require('express-session')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
@@ -27,5 +28,8 @@ app.use(session({
 app.get("/", (req: CustomRequest, res) => { 
   res.send("Exporess is working"); 
 });
+
+app.use(express.json());
+app.use("/api/v1/user", userRouter);
 
 module.exports = app;
