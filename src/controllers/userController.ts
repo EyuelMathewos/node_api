@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import { generateHash } from '../services/auth';
-import { create, login } from '../services/userService'
-
+import { create } from '../services/userService'
+const passport = require('passport');
 interface CustomRequest extends Request {
-    session ? : any
+    session : any
   }
 
 export const register = async (req: Request, res: Response) => {
@@ -19,22 +19,5 @@ export const register = async (req: Request, res: Response) => {
     res.status(201).json({ status: "user registered successfully", data: user });
 };
 
-export const loginUser = async (req: CustomRequest, res: Response) => {
-    const { email, password } = req.body;
-    const response = await login( email, password );
-    const isMatch = response.status;
-    const user = response.User;
-    if(isMatch){
-        const data = {
-            clientId: user.id,
-            role: user.roleId
-        };
-        req.session.isAuth = data
-        res.status(201).json({ status: "user loggedin successfully", data: user });
-    } else {
-        res.status(401).json({message: "Incorrect Password or Account Name"})
-    }
 
-    
-};
 
