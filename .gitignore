@@ -5,7 +5,7 @@
 /dist
 
 #migrations
-/migrations
+/prisma/migrations
 
 # misc
 .env
