@@ -17,7 +17,7 @@ export const create = async (userData: any) => {
                 }
             })
             resolve({ status: 201, message: "user created successfully" });
-        }).catch((validationError) => {
+        }).catch((validationError: any) => {
             const errorMessage = [];
             for (let i = 0; i < validationError.details.length; i++) {
                 errorMessage[i] = validationError.details[i].message;
@@ -36,7 +36,7 @@ export const login = async (email: string, password: string) => {
             const isPass = User.password != null ? bcrypt.compareSync(password, User.password) : false;
             resolve({ status: isPass, User });
         })
-            .catch((validationError) => {
+            .catch((validationError: any) => {
                 const errorMessage = [];
                 for (let i = 0; i < validationError.details.length; i++) {
                     errorMessage[i] = validationError.details[i].message;
