@@ -51,10 +51,9 @@ model Permission {
   accessId    Int
   role        Role     @relation(fields: [accessId], references: [id])
 }
-
 model Session {
   id        String   @id
   sid       String   @unique
-  data      String
+  data      String   @db.VarChar(1000)
   expiresAt   DateTime
 }

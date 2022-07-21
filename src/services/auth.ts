@@ -11,10 +11,6 @@ export function getUser  ( email : string ) {
             email: email
           }
         })
-        // if(!users){
-        //   throw({ message: 'Incorrect email' })
-        // }
-        // console.log(users)
         resolve(users);
       }catch( error ){
         reject(error);
@@ -49,9 +45,4 @@ export function compareHash ( password : string, hashedPassword: string ) {
   });
     }
 )}
-
-// export function login ( username: string ,password : string ) {
-//     console.log("passport js auth")
-
-//  }
  

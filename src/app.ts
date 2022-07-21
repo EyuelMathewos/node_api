@@ -2,13 +2,13 @@ import express, { Request } from 'express';
 import { NextFunction, Response } from 'express-serve-static-core';
 import userRouter from './routes/userRouter';
 import { compareHash, getUser } from './services/auth';
-// import session from 'express-session';
+import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import  { PrismaClient } from '@prisma/client';
+const pgSession = require('connect-pg-simple')(session);
 const app = express();
-const session = require('express-session');
-// const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
-// const { PrismaClient } = require('@prisma/client');
+
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
@@ -17,26 +17,35 @@ interface CustomRequest extends Request {
   session : any
 }
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: false }));
+
+
 app.use(passport.initialize());
-// app.use(passport.session());
+const options ={
+  connectionLimit: 10,
+  password: 'postgres',
+  user: 'postgres',
+  database: 'node_api',
+  host: 'localhost',
+  port: 5432,
+  createTableIfMissing: true
+}
+const pgStore = new pgSession(options)
+
 app.use(session({
-  secret: process.env.SECRET,
+  secret: 'process.env.SECRET',
   resave: false,
   saveUninitialized: false,
-  // cookie: { secure: true, maxAge: 7 * 24 * 60 * 60 * 1000  },
-  store: new PrismaSessionStore(
-    new PrismaClient(),
-    {
-      checkPeriod: 2 * 60 * 1000,  //ms
-      dbRecordIdIsSessionId: true,
-      dbRecordIdFunction: undefined,
-    }
-  )
-})
-);
+  cookie: { 
+    maxAge:2 * 60* 1000,
 
-// app.use(passport.authenticate('session'));
+    secure: false },
+  store:pgStore
+
+  }));
+
+app.use(passport.session());
 passport.use(new LocalStrategy(
   async function(username: any, password: any, done: any) {
     console.log(`username${username} password${password}`)
@@ -50,7 +59,7 @@ passport.use(new LocalStrategy(
    process.nextTick(function() {
      console.log("serilizer user trigered")
      console.log(id)
-     return cb(null, { id: id, username: id });
+     return cb(null, id);
    });
  });
  
@@ -61,17 +70,8 @@ passport.use(new LocalStrategy(
    });
  });
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(passport.authenticate('session'));
-// app.use(passport.authenticate('session'));
-function isAuth (req: CustomRequest, res: Response, next: NextFunction) {
-    //const loggedinUser = req.session.isAuth;
-   // console.log(loggedinUser);
-    next()
-}
+
 app.use(passport.authenticate('session'))
-app.use(isAuth);
 app.get("/", (req: CustomRequest, res) => { 
   res.send("Exporess is working"); 
 });
