@@ -7,7 +7,7 @@ const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const { PrismaClient } = require('@prisma/client');
 
 interface CustomRequest extends Request {
-  session ? : any
+  session?: any
 }
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,15 +27,15 @@ app.use(session({
 })
 );
 
-function isAuth (req: CustomRequest, res: Response, next: NextFunction) {
-    const loggedinUser = req.session.isAuth;
-    console.log(loggedinUser);
-    next()
+function isAuth(req: CustomRequest, res: Response, next: NextFunction) {
+  const loggedinUser = req.session.isAuth;
+  // console.log(loggedinUser);
+  next()
 }
 
 app.use(isAuth);
-app.get("/", (req: CustomRequest, res) => { 
-  res.send("Exporess is working"); 
+app.get("/", (req: CustomRequest, res) => {
+  res.send("Exporess is working");
 });
 
 app.use("/api/v1/user", userRouter);
