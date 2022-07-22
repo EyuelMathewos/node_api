@@ -1,21 +1,13 @@
-import express, {
-    Request,
-    Response
-} from 'express';
+import express, { Request, Response } from 'express';
+import { generateHash } from '../services/auth';
 import {
-    generateHash
-} from '../services/auth';
-import {
+    resetService,
     create,
+    forgotSercice,
     login
 } from '../services/userService'
 
-interface CustomRequest extends Request {
-    isAuthenticated: any;
-    isUnauthenticated: any;
-    login: any;
-    session ? : any;
-}
+
 
 export const register = async (req: Request, res: Response) => {
     const {
@@ -71,16 +63,7 @@ export const loginUser = async (req: any, res: Response) => {
                     })
                 }
             })
-        } else {
-            res.status(401).json({
-                message: "Incorrect Password or Account Name"
-            })
         }
-
-    } else if (user == "") {
-        res.status(404).json({
-            status: "The email you entered does not exist"
-        });
     } else if (isMatch == false) {
         res.status(404).json({
             status: "Incorrect password"
@@ -93,3 +76,54 @@ export const loginUser = async (req: any, res: Response) => {
 
 
 };
+export const logoutUser = async (req: any, res: Response) => {
+    if (req.isAuthenticated()) {
+        req.logout(function (err: any) {
+            if (err) {
+                res.status(401).send(err)
+            } else {
+                res.send({
+                    message: "user successfully logged out"
+                })
+            }
+
+        });
+    } else {
+        res.send({
+            message: "user not authenticated"
+        })
+    }
+}
+export async function forgotPassword(req: any, res: Response) {
+    const { email } = req.body;
+    await forgotSercice(email).then((response: any) => {
+        res.send({
+            message: `check your email '${email}' address to reset you password`
+        })
+    }).catch((error) => {
+        res.status(404).send(error)
+    });
+}
+
+export const resetPassword = async (req: any, res: Response) => {
+    const { id } = req.params;
+    const { password, confirmpassword } = req.body;
+    await resetService(id, password, confirmpassword).then((response) => {
+        res.send(response);
+    }).catch((error) => {
+        res.send(error);
+    })
+
+}
+export const changePassword = async (req: any, res: Response) => {
+    const {
+        email
+    } = req.body;
+    await forgotSercice(email, "SecurityIssue").then((response) => {
+        res.send({
+            message: `reset email sent to this '${email}' email address`
+        })
+    }).catch((error) => {
+        res.status(404).send(error)
+    });
+}

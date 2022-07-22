@@ -8,9 +8,6 @@ const pgSession = require('connect-pg-simple')(session);
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
-interface CustomRequest extends Request {
-  session: any
-}
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
@@ -42,8 +39,8 @@ app.use(session({
 app.use(passport.session());
 passport.use(new LocalStrategy(
   async function(username: any, password: any, done: any) {
-     const user = {id: 1};
-        done(null,  user);
+    //user Auth
+    console.log('login is called')
    }
  ));
  
