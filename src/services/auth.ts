@@ -11,9 +11,10 @@ export function getUser(email: string) {
         }
       })
       if (!users) {
-        resolve("");
-      }
-      else {
+        reject({
+          message: "Account doest exist"
+        });
+      } else {
         resolve(users);
       }
     } catch (error) {
@@ -34,10 +35,8 @@ export function generateHash(password: string) {
           }
         });
       });
-    }
-    else {
+    } else {
       resolve(password);
     }
-  }
-  )
+  })
 }
