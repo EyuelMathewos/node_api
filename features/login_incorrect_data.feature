@@ -9,4 +9,4 @@ Feature: login
     Examples: 
       | email                  | password   | message                                |
       | 'newaccount@gmail.com' | '123456'   | 'The email you entered does not exist' |
-      # | 'newaccount@gmail.com' | '12345678' | 'Incorrect password'                   |
+      | 'hello@gmail.com'      | '12345678' | 'Incorrect password'                   |
