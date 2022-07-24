@@ -9,7 +9,7 @@ Scenario: user enters an invalid password
     # given when password is number
     Examples: 
 |                resetId                  | password | confirmpassword  | status | message                                                   |
-| '31c1540e-02bf-4b90-ac9e-fa5bea17cc11'  | 'pass'   |     'pass'       |  400   | 'The password must at least 6 characters long'            |
-| '31c1540e-02bf-4b90-ac9e-fa5bea17cc11'  | '123456' |   'diffpasswrd'  |  400   | 'you entered different password on confirmation password' |
-| '31c1540e-02bf-4b90-ac9e-fa5bea17cc11'  |   ' '    |      ' '         |  400   | 'password field is required'                              |
-| '31c1540e-02bf-4b90-ac9e-fa5bea17cc11'  |    7     |        7         |  400   | 'email must be a string'                                  |
+| '99e56316-adf8-41ce-a800-8904abd175d1'  | 'pass'   |     'pass'       |  400   | 'The password must at least 6 characters long'            |
+| '99e56316-adf8-41ce-a800-8904abd175d1'  | '123456' |   'diffpasswrd'  |  400   | 'You entered different Password on password confirmation' |
+| '99e56316-adf8-41ce-a800-8904abd175d1'  |   ''     |      ''          |  400   | 'The password field is required'                          |
+| '99e56316-adf8-41ce-a800-8904abd175d1'  |    7     |        7         |  400   | 'password must be a string'                               |

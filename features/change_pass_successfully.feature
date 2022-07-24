@@ -8,4 +8,4 @@ Feature: change password
 
     Examples: 
       | resetLink                              | password  |  confirmpassword | status | message                              |
-      | '31c1540e-02bf-4b90-ac9e-fa5bea17cc11' | '123456'  |      '123456'    |    200 | 'user password successfully changed' |
+      | '99e56316-adf8-41ce-a800-8904abd175d1' | '123456'  |      '123456'    |    200 | 'user password successfully changed' |

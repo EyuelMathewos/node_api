@@ -12,7 +12,7 @@ export function getUser(email: string) {
       })
       if (!users) {
         reject({
-          message: "Account doest exist"
+          message: "The email you entered does not exist"
         });
       } else {
         resolve(users);
@@ -25,7 +25,6 @@ export function getUser(email: string) {
 
 export function generateHash(password: string) {
   return new Promise(async (resolve, reject) => {
-    if (password.length >= 6) {
       bcrypt.genSalt(10, function (err: any, salt: any) {
         bcrypt.hash(password, salt, async function (err: any, hash: unknown) {
           if (err) {
@@ -35,8 +34,5 @@ export function generateHash(password: string) {
           }
         });
       });
-    } else {
-      resolve(password);
-    }
   })
 }

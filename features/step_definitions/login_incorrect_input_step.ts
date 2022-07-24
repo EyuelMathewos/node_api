@@ -31,7 +31,7 @@ Given('account information with  email  {string}  password {int}', function (use
 When('try login with user account invalid input', async function () {
     const res = await request.post("/api/v1/user/login").send(data);
     console.log(res.body);
-    message = res.body.message[0]
+    message = res.body.message;
     statusCode = res.status;
 });
 
@@ -39,8 +39,3 @@ Then('after trying to login with invalid input a user should get a response with
     assertThat(statusCode, expectedCode);
     assertThat(message, expectedMessage);
 });
-// Then('after trying to login with invalid input a user should get a response with status code {int} with message {string}', function (int, string) {
-//     // Then('after trying to login with invalid input a user should get a response with status code {float} with message {string}', function (float, string) {
-//       // Write code here that turns the phrase above into concrete actions
-//       return 'pending';
-//     });

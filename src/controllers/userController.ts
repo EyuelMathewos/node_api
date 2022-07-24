@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, response, Response } from 'express';
 import { generateHash } from '../services/auth';
 import {
     resetService,
@@ -23,16 +23,11 @@ export const register = async (req: Request, res: Response) => {
         email,
         password: hash,
     };
-    const user: any = await create(userData);
-    if (user.status == 201) {
+    const user: any = await create(userData).then(()=>{
         res.status(201).json({
             status: "user registered successfully"
         });
-    } else {
-        res.status(201).json({
-            status: user
-        });
-    }
+    });
 };
 
 export const loginUser = async (req: any, res: Response) => {
@@ -40,39 +35,40 @@ export const loginUser = async (req: any, res: Response) => {
         username,
         password
     } = req.body;
-    const response: any = await login(username, password);
-    const isMatch = response.status;
-    const user = response.User;
-    if (isMatch == true) {
-        const user = {
-            id: response.User.id
+    const response: any = await login(username, password).then((response: any)=>{
+        const isMatch = response.isMatch;
+        if (isMatch == true) {
+            const user = {
+                id: response.Data.id
+            }
+            if (req.isAuthenticated()) {
+                res.status(200).send({
+                    message: 'user logged in'
+                })
+            } else if (req.isUnauthenticated()) {
+                req.login(user, function () {
+                    if (req.isAuthenticated()) {
+                        res.status(200).send({
+                            message: 'user logged in successfully'
+                        })
+                    } else {
+                        res.status(404).send({
+                            message: 'account information incorrect'
+                        })
+                    }
+                })
+            }
+        } else if (isMatch == false) {
+            res.status(401).json({
+                message: "Incorrect password"
+            });
         }
-        if (req.isAuthenticated()) {
-            res.status(200).send({
-                message: 'user logged in'
-            })
-        } else if (req.isUnauthenticated()) {
-            req.login(user, function () {
-                if (req.isAuthenticated()) {
-                    res.status(200).send({
-                        message: 'user logged in successfully'
-                    })
-                } else {
-                    res.status(404).send({
-                        message: 'account information incorrect'
-                    })
-                }
-            })
-        }
-    } else if (isMatch == false) {
-        res.status(404).json({
-            status: "Incorrect password"
-        });
-    } else {
-        res.status(401).json({
-            message: response.message
-        });
-    }
+    })
+    .catch((error)=>{
+        console.log(error)
+        res.status(401).send(error);
+    });
+
 
 
 };
@@ -111,7 +107,7 @@ export const resetPassword = async (req: any, res: Response) => {
     await resetService(id, password, confirmpassword).then((response) => {
         res.send(response);
     }).catch((error) => {
-        res.send(error);
+        res.status(400).send(error);
     })
 
 }

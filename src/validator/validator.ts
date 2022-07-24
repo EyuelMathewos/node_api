@@ -41,3 +41,24 @@ export const loginValidation = Joi.object({
         'any.required': 'password is a required field',
     }),
 })
+
+export const forgotValidation = Joi.object({
+    email: Joi.string().email().required().messages({
+        'string.base': 'email must be a string',
+        'string.email': 'the email format is invalid',
+        'string.empty': 'The email field is required',
+        'any.required': 'email is a required field',
+    })
+})
+
+export const resetValidation = Joi.object({
+    password: Joi.string().required().min(6).messages({
+        'string.base': 'password must be a string',
+        'string.empty': 'The password field is required',
+        'string.min': 'The password must at least 6 characters long',
+        'any.required': 'password is a required field',
+    }),
+    confirmpassword: Joi.any().valid(Joi.ref('password')).required().messages({
+        "any.only" : "You entered different Password on password confirmation"
+      })
+})

@@ -25,7 +25,7 @@ const options = {
 const pgStore = new pgSession(options)
 
 app.use(session({
-  secret: 'process.env.SECRET',
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -36,13 +36,13 @@ app.use(session({
 
 }));
 
-app.use(passport.session());
-passport.use(new LocalStrategy(
-  async function(username: any, password: any, done: any) {
-    //user Auth
-    console.log('login is called')
-   }
- ));
+// app.use(passport.session());
+// passport.use(new LocalStrategy(
+//   async function(username: any, password: any, done: any) {
+//     //user Auth
+//     console.log('login is called')
+//    }
+//  ));
  
  passport.serializeUser(function(id: any, cb: any) {
    process.nextTick(function() {
